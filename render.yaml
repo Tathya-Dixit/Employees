@@ -1,0 +1,26 @@
+databases:
+  - name: employees_db
+    databaseName: employees_db
+    user: employees_user
+
+services:
+  - type: web
+    name: employee-api
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn employees.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: employees_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
